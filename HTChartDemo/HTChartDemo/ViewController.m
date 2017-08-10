@@ -7,6 +7,7 @@
 //
 
 #import "ViewController.h"
+#import "HTChartView.h"
 
 @interface ViewController ()
 
@@ -16,7 +17,13 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    // Do any additional setup after loading the view, typically from a nib.
+    
+//    self.view.backgroundColor = [UIColor colorWithRed:0.1 green:0.1 blue:0.1 alpha:1];
+    
+    HTChartView *chartView = [[HTChartView alloc] initWithFrame:CGRectMake(0, 0, 320, 250)];
+    chartView.backgroundColor = [UIColor colorWithRed:0.1 green:0.1 blue:0.1 alpha:1];
+    [chartView setCenter:CGPointMake([UIScreen mainScreen].bounds.size.width/2, [UIScreen mainScreen].bounds.size.height/2)];
+    [self.view addSubview:chartView];
 }
 
 
