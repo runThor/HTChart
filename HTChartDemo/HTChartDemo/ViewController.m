@@ -11,6 +11,8 @@
 
 @interface ViewController ()
 
+@property (nonatomic, strong)HTChartView *chartView;
+
 @end
 
 @implementation ViewController
@@ -20,10 +22,25 @@
     
 //    self.view.backgroundColor = [UIColor colorWithRed:0.1 green:0.1 blue:0.1 alpha:1];
     
-    HTChartView *chartView = [[HTChartView alloc] initWithFrame:CGRectMake(0, 0, 320, 250)];
-    chartView.backgroundColor = [UIColor colorWithRed:0.1 green:0.1 blue:0.1 alpha:1];
-    [chartView setCenter:CGPointMake([UIScreen mainScreen].bounds.size.width/2, [UIScreen mainScreen].bounds.size.height/2)];
-    [self.view addSubview:chartView];
+    self.chartView = [[HTChartView alloc] initWithFrame:CGRectMake(0, 0, 320, 250)];
+    self.chartView.backgroundColor = [UIColor colorWithRed:0.1 green:0.1 blue:0.1 alpha:1];
+    [self.chartView setCenter:CGPointMake([UIScreen mainScreen].bounds.size.width/2, [UIScreen mainScreen].bounds.size.height/2)];
+    [self.view addSubview:self.chartView];
+    
+    [self addlines];
+}
+
+- (void)addlines {
+    HTLine *yellowLine = [[HTLine alloc] init];
+    [yellowLine.dataArr addObjectsFromArray:@[@(1), @(3), @(5), @(7), @(9)]];
+    yellowLine.lineColor = [UIColor yellowColor];
+    
+    HTLine *redLine = [[HTLine alloc] init];
+    [redLine.dataArr addObjectsFromArray:@[@(2), @(4), @(3), @(6), @(9)]];
+    redLine.lineColor = [UIColor redColor];
+    
+    NSArray *linesArr = @[yellowLine, redLine];
+    [self.chartView addLines:linesArr];
 }
 
 

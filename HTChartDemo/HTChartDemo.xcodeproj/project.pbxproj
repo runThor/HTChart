@@ -14,6 +14,7 @@
 		F757269A1F3C373F000FB3E5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F75726991F3C373F000FB3E5 /* Assets.xcassets */; };
 		F757269D1F3C373F000FB3E5 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F757269B1F3C373F000FB3E5 /* LaunchScreen.storyboard */; };
 		F75726A71F3C3C9E000FB3E5 /* HTChartView.m in Sources */ = {isa = PBXBuildFile; fileRef = F75726A61F3C3C9E000FB3E5 /* HTChartView.m */; };
+		F79709141F417B57001B0330 /* HTLine.m in Sources */ = {isa = PBXBuildFile; fileRef = F79709131F417B57001B0330 /* HTLine.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -29,6 +30,8 @@
 		F757269E1F3C373F000FB3E5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		F75726A51F3C3C9E000FB3E5 /* HTChartView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HTChartView.h; sourceTree = "<group>"; };
 		F75726A61F3C3C9E000FB3E5 /* HTChartView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HTChartView.m; sourceTree = "<group>"; };
+		F79709121F417B56001B0330 /* HTLine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HTLine.h; sourceTree = "<group>"; };
+		F79709131F417B57001B0330 /* HTLine.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HTLine.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -88,6 +91,8 @@
 			children = (
 				F75726A51F3C3C9E000FB3E5 /* HTChartView.h */,
 				F75726A61F3C3C9E000FB3E5 /* HTChartView.m */,
+				F79709121F417B56001B0330 /* HTLine.h */,
+				F79709131F417B57001B0330 /* HTLine.m */,
 			);
 			path = HTChart;
 			sourceTree = "<group>";
@@ -167,6 +172,7 @@
 				F75726A71F3C3C9E000FB3E5 /* HTChartView.m in Sources */,
 				F75726921F3C373F000FB3E5 /* AppDelegate.m in Sources */,
 				F757268F1F3C373F000FB3E5 /* main.m in Sources */,
+				F79709141F417B57001B0330 /* HTLine.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -325,6 +331,7 @@
 				F75726A31F3C373F000FB3E5 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

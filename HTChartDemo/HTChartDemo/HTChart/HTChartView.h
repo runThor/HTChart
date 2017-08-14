@@ -7,7 +7,10 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "HTLine.h"
 
 @interface HTChartView : UIView
+
+- (void)addLines:(NSArray *)lines;
 
 @end

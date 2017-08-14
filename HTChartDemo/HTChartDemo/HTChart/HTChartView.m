@@ -8,6 +8,7 @@
 
 #import "HTChartView.h"
 
+
 #define VIEW_WIDTH  self.frame.size.width
 #define VIEW_HEIGHT self.frame.size.height
 
@@ -18,7 +19,12 @@
 @property (nonatomic, assign) CGFloat leftMargin;
 @property (nonatomic, assign) CGFloat rightMargin;
 @property (nonatomic, assign) NSInteger horizontalValueLinesCount;
-@property (nonatomic, strong) NSMutableArray *dataArr;
+@property (nonatomic, assign) CGFloat maxValue;
+@property (nonatomic, assign) CGFloat minValue;
+@property (nonatomic, assign) CGFloat contentOffset;
+@property (nonatomic, assign) CGFloat pointInterval;
+@property (nonatomic, strong) NSMutableArray *linesArr;
+@property (nonatomic, strong) NSMutableArray *dataOriginArr;
 
 @end
 
@@ -34,7 +40,10 @@
         self.rightMargin = 10.0;
         self.horizontalValueLinesCount = 5;
         
-        self.dataArr = [[NSMutableArray alloc] initWithObjects:@1, @2, @3, @4, @5, nil];
+        self.maxValue = 10;
+        self.minValue = 0;
+        self.pointInterval = 40;
+        self.linesArr = [[NSMutableArray alloc] init];
         
     }
     
@@ -43,6 +52,12 @@
 
 - (void)drawRect:(CGRect)rect {
     
+    [self drawChartFrame];
+    
+    [self drawLines];
+}
+
+- (void)drawChartFrame {
     CGContextRef context = UIGraphicsGetCurrentContext();
     
     CGContextSetStrokeColorWithColor(context, [UIColor whiteColor].CGColor);
@@ -53,7 +68,7 @@
     
     // Draw the X axis
     CGContextAddLineToPoint(context, VIEW_WIDTH - self.rightMargin, VIEW_HEIGHT - self.bottomMargin);
-
+    
     // Draw the right border
     CGContextAddLineToPoint(context, VIEW_WIDTH - self.rightMargin, self.topMargin);
     
@@ -72,40 +87,60 @@
     }
     
     CGContextStrokePath(context);
-    
-    // Draw data points
-    CGContextSetFillColorWithColor(context, [UIColor yellowColor].CGColor);
-    
-    for (int i = 0; i < self.dataArr.count; i++) {
-        
-        CGFloat originX = self.leftMargin + i * 40;
-        CGFloat originY = 100;
-        
-        CGContextFillEllipseInRect(context, CGRectMake(originX - 2.5, originY - 2.5, 5, 5));
-        
-    }
-    
-    // Draw data lines
-    CGContextSetStrokeColorWithColor(context, [UIColor yellowColor].CGColor);
-    
-    for (int i = 0; i < self.dataArr.count; i++) {
-        
-        CGFloat originX = self.leftMargin + i * 40;
-        CGFloat originY = 100;
-        
-        if (0 == i) {
-            CGContextMoveToPoint(context, self.leftMargin, 100);
-        }
-        
-        CGContextAddLineToPoint(context, originX, originY);
-        
-    }
-    
-    CGContextStrokePath(context);
 }
 
 
 
+- (void)drawLines {
+    CGContextRef context = UIGraphicsGetCurrentContext();
+    
+    for (int lineIndex = 0; lineIndex < self.linesArr.count; lineIndex++) {
+        HTLine *line = self.linesArr[lineIndex];
+        
+        // get data points origin
+        NSMutableArray *originArr = [[NSMutableArray alloc] init];
+        
+        for (int dataIndex = 0; dataIndex < line.dataArr.count; dataIndex++) {
+            CGFloat x = self.leftMargin + dataIndex * self.pointInterval - self.contentOffset;
+            CGFloat y = VIEW_HEIGHT - ([line.dataArr[dataIndex] floatValue]/(self.maxValue - self.minValue) * (VIEW_HEIGHT - self.topMargin - self.bottomMargin) + self.bottomMargin);
+            
+            [originArr addObject:NSStringFromCGPoint(CGPointMake(x, y))];
+        }
+        
+        [self.dataOriginArr addObject:originArr];
+        
+        // Draw data points
+        CGContextSetFillColorWithColor(context, line.lineColor.CGColor);
+        
+        for (NSString *origin in originArr) {
+            CGPoint dataOrigin = CGPointFromString(origin);
+            
+            CGContextFillEllipseInRect(context, CGRectMake(dataOrigin.x - 2.5, dataOrigin.y - 2.5, 5, 5));
+        }
+        
+        // Draw data lines
+        CGContextSetStrokeColorWithColor(context, line.lineColor.CGColor);
+        
+        for (int dataIndex = 0; dataIndex < originArr.count; dataIndex++) {
+            CGPoint dataOrigin = CGPointFromString(originArr[dataIndex]);
+            
+            if (0 == dataIndex) {
+                CGContextMoveToPoint(context, dataOrigin.x, dataOrigin.y);
+            } else {
+                CGContextAddLineToPoint(context, dataOrigin.x, dataOrigin.y);
+            }
+        }
+        
+        CGContextStrokePath(context);
+    }
+}
+
+
+- (void)addLines:(NSArray *)lines {
+    [self.linesArr addObjectsFromArray:lines];
+    
+    [self setNeedsDisplay];
+}
 
 
 
