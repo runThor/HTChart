@@ -32,7 +32,7 @@
 
 - (void)addlines {
     HTLine *yellowLine = [[HTLine alloc] init];
-    [yellowLine.dataArr addObjectsFromArray:@[@(1), @(3), @(5), @(7), @(9)]];
+    [yellowLine.dataArr addObjectsFromArray:@[@(1), @(3), @(5), @(7), @(9), @(9), @(9), @(9), @(9), @(9), @(9), @(9), @(9), @(9), @(9), @(9), @(9), @(9), @(9), @(9), @(9), @(9), @(9), @(9)]];
     yellowLine.lineColor = [UIColor yellowColor];
     
     HTLine *redLine = [[HTLine alloc] init];

@@ -115,19 +115,50 @@
         for (NSString *origin in originArr) {
             CGPoint dataOrigin = CGPointFromString(origin);
             
-            CGContextFillEllipseInRect(context, CGRectMake(dataOrigin.x - 2.5, dataOrigin.y - 2.5, 5, 5));
+            if (dataOrigin.x >= self.leftMargin) {
+                if (dataOrigin.x > VIEW_WIDTH - self.rightMargin) {
+                    break;
+                } else {
+                    CGContextFillEllipseInRect(context, CGRectMake(dataOrigin.x - 2.5, dataOrigin.y - 2.5, 5, 5));
+                }
+            }
         }
         
         // Draw data lines
         CGContextSetStrokeColorWithColor(context, line.lineColor.CGColor);
         
+        BOOL startDrawing = NO;
+        
         for (int dataIndex = 0; dataIndex < originArr.count; dataIndex++) {
             CGPoint dataOrigin = CGPointFromString(originArr[dataIndex]);
             
-            if (0 == dataIndex) {
-                CGContextMoveToPoint(context, dataOrigin.x, dataOrigin.y);
+            if (startDrawing == NO) {
+                if (dataOrigin.x >= self.leftMargin) {
+                    if (dataIndex == 0) {
+                        CGContextMoveToPoint(context, dataOrigin.x, dataOrigin.y);
+                    } else {
+                        // Intersection with the Y axis
+                        CGPoint lastDataOrigin = CGPointFromString(originArr[dataIndex - 1]);
+                        CGFloat startPointY = dataOrigin.y - (dataOrigin.x - self.leftMargin)/self.pointInterval * (dataOrigin.y - lastDataOrigin.y);
+                        
+                        CGContextMoveToPoint(context, self.leftMargin, startPointY);
+                        CGContextAddLineToPoint(context, dataOrigin.x, dataOrigin.y);
+                    }
+                    
+                    startDrawing = YES;
+                }
             } else {
-                CGContextAddLineToPoint(context, dataOrigin.x, dataOrigin.y);
+                if (dataOrigin.x >= VIEW_WIDTH - self.rightMargin) {
+                    // Intersection with the right border
+                    CGPoint lastDataOrigin = CGPointFromString(originArr[dataIndex - 1]);
+                    CGFloat endPointY = dataOrigin.y - (dataOrigin.x - (VIEW_WIDTH - self.rightMargin))/self.pointInterval * (dataOrigin.y - lastDataOrigin.y);
+                    
+                    CGContextAddLineToPoint(context, VIEW_WIDTH - self.rightMargin, endPointY);
+                    
+                    break;
+                } else {
+                    CGContextAddLineToPoint(context, dataOrigin.x, dataOrigin.y);
+                }
             }
         }
         
