@@ -13,7 +13,6 @@
 - (instancetype)init {
     if (self = [super init]) {
         self.dataArr = [[NSMutableArray alloc] init];
-        self.timeArr = [[NSMutableArray alloc] init];
     }
     
     return self;

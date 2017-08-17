@@ -11,6 +11,8 @@
 
 #define VIEW_WIDTH  self.frame.size.width
 #define VIEW_HEIGHT self.frame.size.height
+#define MAX_POINT_INTERVAL  60
+#define MIN_POINT_INTERVAL  5
 
 @interface HTChartView ()
 
@@ -19,8 +21,6 @@
 @property (nonatomic, assign) CGFloat leftMargin;
 @property (nonatomic, assign) CGFloat rightMargin;
 @property (nonatomic, assign) NSInteger horizontalValueLinesCount;
-@property (nonatomic, assign) CGFloat maxValue;
-@property (nonatomic, assign) CGFloat minValue;
 @property (nonatomic, assign) CGFloat contentOffset;
 @property (nonatomic, assign) CGFloat pointInterval;
 @property (nonatomic, strong) NSMutableArray *linesArr;
@@ -33,25 +33,21 @@
 - (instancetype)initWithFrame:(CGRect)frame {
     
     if (self = [super initWithFrame:frame]) {
+        self.backgroundColor = [UIColor colorWithRed:0.1 green:0.1 blue:0.1 alpha:1];
         
         self.topMargin = 20.0;
         self.bottomMargin = 20.0;
         self.leftMargin = 30.0;
         self.rightMargin = 10.0;
         self.horizontalValueLinesCount = 5;
-        
-        self.maxValue = 10;
-        self.minValue = 0;
         self.pointInterval = 40;
         self.linesArr = [[NSMutableArray alloc] init];
-        
     }
     
     return self;
 }
 
 - (void)drawRect:(CGRect)rect {
-    
     [self drawChartFrame];
     
     [self drawLines];
@@ -174,7 +170,43 @@
 }
 
 
+- (void)touchesMoved:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
+    CGFloat lineLength = self.pointInterval * ([self.linesArr[0] dataArr].count - 1);
 
+    NSArray *touchesArr = [event allTouches].allObjects;
+    
+    if (1 == touchesArr.count) {
+        CGPoint currentTouchPoint = [[touches anyObject] locationInView:self];
+        CGPoint previousTouchPoint = [[touches anyObject] previousLocationInView:self];
+        
+        self.contentOffset += previousTouchPoint.x - currentTouchPoint.x;
+    } else if (2 == touchesArr.count) {
+        CGPoint currentOnePoint = [touchesArr[0] locationInView:self];
+        CGPoint currentAnotherPoint = [touchesArr[1] locationInView:self];
+        CGPoint previousOnePoint = [touchesArr[0] previousLocationInView:self];
+        CGPoint previousAnotherPoint = [touchesArr[1] previousLocationInView:self];
+        
+        CGFloat currentFingerSpacing = fabs(currentOnePoint.x - currentAnotherPoint.x);
+        CGFloat previousFingerSpacing = fabs(previousOnePoint.x - previousAnotherPoint.x);
+        CGFloat centerX = (currentOnePoint.x - currentAnotherPoint.x)/2 + currentAnotherPoint.x;
+        
+        if (currentFingerSpacing > previousFingerSpacing && self.pointInterval < MAX_POINT_INTERVAL) {
+            self.pointInterval *= 1.05;
+            self.contentOffset = self.contentOffset * 1.05 + (centerX - self.leftMargin) * 0.05;
+        } else if (currentFingerSpacing < previousFingerSpacing && self.pointInterval > MIN_POINT_INTERVAL) {
+            self.pointInterval *= 0.95;
+            self.contentOffset = self.contentOffset * 0.95 - (centerX - self.leftMargin) * 0.05;
+        }
+    }
+    
+    if (self.contentOffset < 0) {
+        self.contentOffset = 0;
+    } else if (self.contentOffset > lineLength) {
+        self.contentOffset = lineLength;
+    }
+    
+    [self setNeedsDisplay];
+}
 
 
 

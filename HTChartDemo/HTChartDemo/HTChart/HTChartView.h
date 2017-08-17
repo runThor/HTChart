@@ -11,6 +11,9 @@
 
 @interface HTChartView : UIView
 
+@property (nonatomic, assign) CGFloat maxValue;
+@property (nonatomic, assign) CGFloat minValue;
+
 - (void)addLines:(NSArray *)lines;
 
 @end

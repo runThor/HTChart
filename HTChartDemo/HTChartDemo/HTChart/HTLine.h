@@ -11,7 +11,6 @@
 @interface HTLine : UIView
 
 @property (nonatomic, strong) NSMutableArray *dataArr;
-@property (nonatomic, strong) NSMutableArray *timeArr;
 @property (nonatomic, strong) UIColor *lineColor;
 
 @end
